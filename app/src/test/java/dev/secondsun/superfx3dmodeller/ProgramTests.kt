@@ -18,5 +18,15 @@ class ProgramTests {
                 nop
                 stop
         """.trimIndent())
+        /*
+        * Program(address) {
+        *  nop
+        *  ...
+        *  stop
+        * }
+        *
+        * SuperFx.PBR(bank, address).start() ?
+        *
+        * */
     }
 }

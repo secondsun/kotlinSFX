@@ -8,6 +8,6 @@ class SuperFX {
     val memory = ByteArray(Params.MEMORY_SIZE)
 
     val statusRegister = Register()
-    val
+
 
 }
