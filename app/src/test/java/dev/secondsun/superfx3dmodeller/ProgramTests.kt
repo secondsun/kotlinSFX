@@ -1,6 +1,6 @@
 package dev.secondsun.superfx3dmodeller
 
-import dev.secondsun.superfx3dmodeller.cpu.SuperFX.Flags.ALT1
+import dev.secondsun.superfx3dmodeller.cpu.SuperFX.FlagMasks.ALT1
 import dev.secondsun.superfx3dmodeller.instruction.Program
 import org.junit.Assert.assertEquals
 import org.junit.Test

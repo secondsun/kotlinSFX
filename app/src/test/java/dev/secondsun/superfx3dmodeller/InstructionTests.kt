@@ -3,9 +3,54 @@ package dev.secondsun.superfx3dmodeller
 import dev.secondsun.superfx3dmodeller.cpu.SuperFX
 import  org.junit.Assert.assertEquals
 import org.junit.Test
-import kotlin.experimental.and
 
 class InstructionTests {
+
+    @Test
+    fun testToFromWithInstruction() {
+        var sfx = SuperFX().apply {
+            from(2)
+        };
+
+        assertEquals(sfx.R2, sfx.Sreg)
+        assertEquals(sfx.R0, sfx.Dreg)
+        sfx = SuperFX().apply {
+            to(9)
+        };
+        assertEquals(sfx.R0, sfx.Sreg)
+        assertEquals(sfx.R9, sfx.Dreg)
+
+        sfx = SuperFX().apply {
+            with(5)
+        };
+
+        assertEquals(sfx.R5, sfx.Sreg)
+        assertEquals(sfx.R5, sfx.Dreg)
+
+    }
+
+
+    @Test
+    fun testIWT(){
+        val sfx = SuperFX().apply {
+            statusRegister.value = 0xFFFFu;//We're setting all flags to test resets
+            iwt(1u, 0x1234u)//instruction
+        };
+        assertEquals(0x1234u.toUShort(), sfx.R1.value)
+        assertEquals(
+            "ALT1 is reset",
+            0.toUShort(),
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT1
+        );
+        assertEquals(
+            "ALT2 is reset",
+            0.toUShort(),
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT2
+        );
+        assertEquals("B is reset", 0.toUShort(), sfx.statusRegister.value and SuperFX.FlagMasks.B);
+        assertEquals(0x0003u.toUShort(), sfx.R15.value)
+    }
+
     @Test
     fun testNopInstruction() {
         val sfx = SuperFX().apply {
@@ -16,14 +61,14 @@ class InstructionTests {
         assertEquals(
             "ALT1 is reset",
             0.toUShort(),
-            sfx.statusRegister.value and SuperFX.Flags.ALT1
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT1
         );
         assertEquals(
             "ALT2 is reset",
             0.toUShort(),
-            sfx.statusRegister.value and SuperFX.Flags.ALT2
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT2
         );
-        assertEquals("B is reset", 0.toUShort(), sfx.statusRegister.value and SuperFX.Flags.B);
+        assertEquals("B is reset", 0.toUShort(), sfx.statusRegister.value and SuperFX.FlagMasks.B);
     }
 
     @Test
@@ -34,13 +79,13 @@ class InstructionTests {
         assertEquals("Increment PC by 1", 1.toUShort(), sfx.R15.value);
         assertEquals(
             "ALT1 is set",
-            SuperFX.Flags.ALT1,
-            sfx.statusRegister.value and SuperFX.Flags.ALT1
+            SuperFX.FlagMasks.ALT1,
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT1
         );
         assertEquals(
             "ALT2 is reset",
             0.toUShort(),
-            sfx.statusRegister.value and SuperFX.Flags.ALT2
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT2
         );
 
     }
@@ -54,12 +99,12 @@ class InstructionTests {
         assertEquals(
             "ALT1 is reset",
             0.toUShort(),
-            sfx.statusRegister.value and SuperFX.Flags.ALT1
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT1
         );
         assertEquals(
             "ALT2 is set",
-            SuperFX.Flags.ALT2,
-            sfx.statusRegister.value and SuperFX.Flags.ALT2
+            SuperFX.FlagMasks.ALT2,
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT2
         );
 
     }
@@ -73,13 +118,13 @@ class InstructionTests {
         assertEquals("Increment PC by 1", 1.toUShort(), sfx.R15.value);
         assertEquals(
             "ALT1 is set",
-            SuperFX.Flags.ALT1,
-            sfx.statusRegister.value and SuperFX.Flags.ALT1
+            SuperFX.FlagMasks.ALT1,
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT1
         );
         assertEquals(
             "ALT2 is set",
-            SuperFX.Flags.ALT2,
-            sfx.statusRegister.value and SuperFX.Flags.ALT2
+            SuperFX.FlagMasks.ALT2,
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT2
         );
 
     }

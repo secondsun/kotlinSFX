@@ -12,4 +12,6 @@ class Register(private var _value: UShort = 0u) {
         _value = (it.toUShort() and 0xFFFFu)
     }
 
+
+
 }
