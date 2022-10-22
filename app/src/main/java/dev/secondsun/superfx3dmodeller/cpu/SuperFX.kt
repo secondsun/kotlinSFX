@@ -5,6 +5,7 @@ import dev.secondsun.superfx3dmodeller.cpu.SuperFX.FlagMasks.B
 import dev.secondsun.superfx3dmodeller.cpu.SuperFX.FlagMasks.ALT1
 import dev.secondsun.superfx3dmodeller.cpu.SuperFX.FlagMasks.ALT2
 
+
 class SuperFX {
     object Params {
         val MEMORY_SIZE = 512 * 1024
@@ -103,6 +104,30 @@ class SuperFX {
         GENERAL_REGISTER[register].value = twoByte
         R15.value= (R15.value+3u).toUShort()
         statusRegister.value = statusRegister.value and (ALT1 or ALT2 or B).inv()
+    }
+
+    /**
+     *
+     * Sign extended load of data into register. 2 byte instruction
+     *
+     * @param register the register to load data into
+     * @param data the data to load
+     */
+    fun ibt(register: Int, data: UByte) {
+        GENERAL_REGISTER[register].value = data.signExtend()
+        statusRegister.value = statusRegister.value and (ALT1 or ALT2 or B).inv()
+        R15.value= (R15.value+2u).toUShort()
+    }
+
+}
+
+inline fun UByte.signExtend(): UShort {
+    val byte = this;
+    val sign = (byte and 0b10000000u);
+    if (sign == 0x0.toUByte()) {
+        return byte.toUShort();
+    } else {
+        return (byte.toUShort() or 0xFF00.toUShort())
     }
 
 }

@@ -7,6 +7,15 @@ import org.junit.Test
 class InstructionTests {
 
     @Test
+    fun testADC() {
+        var sfx = SuperFX().apply {
+
+        };
+
+    }
+
+
+    @Test
     fun testToFromWithInstruction() {
         var sfx = SuperFX().apply {
             from(2)
@@ -29,6 +38,36 @@ class InstructionTests {
 
     }
 
+    @Test
+    fun testIBT(){
+        var sfx = SuperFX().apply {
+            statusRegister.value = 0xFFFFu;//We're setting all flags to test resets
+            ibt(1, 0x01u)//instruction
+        };
+
+        assertEquals(1.toUShort(), sfx.R1.value)
+        assertEquals(
+            "ALT1 is reset",
+            0.toUShort(),
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT1
+        );
+        assertEquals(
+            "ALT2 is reset",
+            0.toUShort(),
+            sfx.statusRegister.value and SuperFX.FlagMasks.ALT2
+        );
+        assertEquals("B is reset", 0.toUShort(), sfx.statusRegister.value and SuperFX.FlagMasks.B);
+        assertEquals(0x0002u.toUShort(), sfx.R15.value)
+
+        //TestSignExtend
+        sfx = SuperFX().apply {
+            statusRegister.value = 0xFFFFu;//We're setting all flags to test resets
+            ibt(1, 0xFFu)//instruction
+
+        };
+        assertEquals(0xFFFFu.toUShort(), sfx.R1.value)
+
+    }
 
     @Test
     fun testIWT(){
