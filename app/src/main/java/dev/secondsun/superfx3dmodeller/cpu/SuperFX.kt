@@ -100,7 +100,7 @@ class SuperFX {
         R15.value++
     }
 
-    fun iwt(register: UShort, twoByte: UShort) {
+    fun iwt(register: RegisterIndex, twoByte: UShort) {
         GENERAL_REGISTER[register].value = twoByte
         R15.value= (R15.value+3u).toUShort()
         statusRegister.value = statusRegister.value and (ALT1 or ALT2 or B).inv()
@@ -113,7 +113,7 @@ class SuperFX {
      * @param register the register to load data into
      * @param data the data to load
      */
-    fun ibt(register: Int, data: UByte) {
+    fun ibt(register: RegisterIndex, data: UByte) {
         GENERAL_REGISTER[register].value = data.signExtend()
         statusRegister.value = statusRegister.value and (ALT1 or ALT2 or B).inv()
         R15.value= (R15.value+2u).toUShort()
@@ -132,6 +132,6 @@ inline fun UByte.signExtend(): UShort {
 
 }
 
-private operator fun <Register> Array<Register>.get(register: UShort): Register {
+private operator fun <Register> Array<Register>.get(register: RegisterIndex): Register {
     return this[register.toInt()]
 }
