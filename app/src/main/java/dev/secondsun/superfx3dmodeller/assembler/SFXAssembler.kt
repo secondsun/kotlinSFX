@@ -1,7 +1,6 @@
 package dev.secondsun.superfx3dmodeller.assembler
 
 import dev.secondsun.superfx3dmodeller.cpu.RegisterIndex
-import dev.secondsun.superfx3dmodeller.cpu.SuperFX
 import dev.secondsun.superfx3dmodeller.instruction.InstructionList
 
 class SFXAssembler private constructor(): InstructionList {
@@ -379,19 +378,45 @@ class SFXAssembler private constructor(): InstructionList {
     }
 
     override fun move(index: RegisterIndex, data: Integer) {
-        TODO("Not yet implemented")
+        if (data >= -128 && data <= 127) {
+            ibt(index, data.toByte().toUByte());
+        } else {
+            iwt(index, data.toShort().toUShort());
+        }
     }
 
-    override fun move(data: UShort, index: RegisterIndex) {
-        TODO("Not yet implemented")
+    override fun moveFromAddress(index: RegisterIndex, data: UShort) {
+        if ((data >= 0u && data <= 0x1FFu) && (data % 2u == 0u)) {
+            lms(index, data.toUByte())
+        } else {
+            lm(index, data);
+        }
+    }
+
+    override fun moveToAddress(data: UShort, index: RegisterIndex) {
+        if ((data >= 0u && data <= 0x1FFu) && (data % 2u == 0u)) {
+            sms(data, index)
+        } else {
+            sm(data, index);
+        }
     }
 
     override fun movebFromMemory(index1: RegisterIndex, index2: RegisterIndex) {
-        TODO("Not yet implemented")
+        if (index1.toInt() == 0) {
+            ldb(index2)
+        } else {
+            to(index1)
+            ldb(index2)
+        }
     }
 
-    override fun movebToMemory(index1: RegisterIndex, index2: RegisterIndex) {
-        TODO("Not yet implemented")
+    override fun movebToMemory(index2: RegisterIndex, index1: RegisterIndex) {
+        if (index1.toInt() == 0) {
+            stb(index2)
+        } else {
+            from(index1)
+            stb(index2)
+        }
     }
 
     override fun moves(index1: RegisterIndex, index2: RegisterIndex) {

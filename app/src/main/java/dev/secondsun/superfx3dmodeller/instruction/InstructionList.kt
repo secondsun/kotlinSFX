@@ -75,7 +75,9 @@ interface InstructionList {
     fun merge()
     fun move(index1: RegisterIndex, index2: RegisterIndex)
     fun move(index: RegisterIndex, data: Integer)
-    fun move(data: UShort, index: RegisterIndex)
+    fun moveFromAddress(index: RegisterIndex, data: UShort)
+    fun moveToAddress(data: UShort, index: RegisterIndex)
+
     fun movebFromMemory(index1: RegisterIndex, index2: RegisterIndex)
     fun movebToMemory(index1: RegisterIndex, index2: RegisterIndex)
     fun moves(index1: RegisterIndex, index2: RegisterIndex)
@@ -107,6 +109,7 @@ interface InstructionList {
     fun swap()
     fun to(index: RegisterIndex)
     fun umult(index: RegisterIndex)
+
 
 
 }
